@@ -1,131 +1,192 @@
-# Demo服务实例部署文档
+# Building a Retrieval-Augmented Generation (RAG) Service on Compute Nest with Alibaba Cloud Model Studio and AnalyticDB for PostgreSQL
 
-## 概述
+This tutorial provides a step-by-step guide to setting up a Retrieval-Augmented Generation (RAG) service using Alibaba Cloud Model Studio, Compute Nest, and AnalyticDB for PostgreSQL. With Model Studio, you can leverage top-tier generative AI models like Qwen to develop, deploy, and manage AI applications effortlessly. This setup ensures secure and efficient data handling within your enterprise, enhancing AI capabilities and enabling seamless natural language queries.
 
-`(服务概述内容)`。
+## Introduction
 
-```
-eg：
+Alibaba Cloud Model Studio provides a comprehensive platform for developing generative AI applications. Using Compute Nest and AnalyticDB for PostgreSQL, you can create a secure, efficient Retrieval-Augmented Generation (RAG) service to enhance AI capabilities within your enterprise.
 
-Demo服务是计算巢提供的示例。
-本文向您介绍如何开通计算巢上的`Demo`服务，以及部署流程和使用说明。
-```
+## Overview of Alibaba Cloud Model Studio
 
-## 计费说明
+![Model Studio](./images/model-studio-features.png)
+*Features shown in this diagram will be launched gradually
 
-`(计费说明内容)`
+### What is Model Studio?
 
-```
-eg:
+[Alibaba Cloud Model Studio](https://www.alibabacloud.com/en/product/modelstudio) is an end-to-end platform aimed at simplifying the development, deployment, and management of generative AI models. With access to industry-leading foundation models like Qwen-Max, Qwen-Plus, Qwen-Turbo, and Qwen 2 series, Model Studio provides tools for model fine-tuning, evaluation, deployment, and integration with enterprise systems.
 
-Demo在计算巢上的费用主要涉及：
+### Key Capabilities of Model Studio
 
-- 所选vCPU与内存规格
-- 系统盘类型及容量
-- 公网带宽
+1. **Easy Access to Leading Foundation Models (FM)**:
+   - Models like Qwen-Max, Qwen-Plus, Qwen-Turbo, and the Qwen 2 series power your applications with enhanced AI capabilities.
 
-计费方式包括：
+2. **Built-In Model Inference and Evaluation Workflows**:
+   - Support for Supervised Fine-Tuning (SFT) and Low-Rank Adaptation (LoRA).
+   - Model compression, inference acceleration, and multi-dimensional evaluation tools.
+   - One-click model deployment.
 
-- 按量付费（小时）
-- 包年包月
+3. **Simplified Generative AI Application Development**:
+   - Visual workflows for developing applications.
+   - Template-based prompt engineering.
+   - Extensive APIs for integration with business systems.
 
-目前提供如下实例：
+4. **Comprehensive Security Measures**:
+   - Isolated VPC networks for securing data.
+   - tools for content governance and human-in-the-loop interventions to ensure responsible AI practices.
 
-| 规格族 | vCPU与内存 | 系统盘 | 公网带宽 |
-| --- | --- | --- | --- |
-| ecs.r6.xlarge | 内存型r6，4vCPU 32GiB | ESSD云盘 200GiB PL0 | 固定带宽1Mbps |
+5. **Third-Party Models**:
+   - Support for third-party models like Tongyi, showcased in Q&A, writing, and NL2SQL (Natural Language to SQL) functionalities.
 
-预估费用在创建实例时可实时看到。
-如需更多规格、其他服务（如集群高可用性要求、企业级支持服务等），请联系我们 [mailto:xx@xx.com](mailto:xx@xx.com)。
+6. **Data Management**:
+   - Dataset cleansing and management.
+   - Retrieval-Augmented Generation (RAG) for enhanced search and data access.
 
-```
+7. **Industry-Specific Models**:
+   - Custom models for sectors like healthcare, finance, and legal services.
 
-## 部署架构
+8. **API and SDK**:
+   - Assistant API and a suite of SDKs for quick integration and agent development.
 
-`(部署概述内容)`
+## Prerequisites
 
-## RAM账号所需权限
+Before starting, ensure you have:
+- An active Alibaba Cloud account.
+- Familiarity with cloud services and AI models.
 
-`(权限策略内容)`
+## Step 1: Alibaba Cloud Account Setup
 
-```
-eg: 
+If you haven't already, sign up for an Alibaba Cloud account:
+[Sign up](https://www.alibabacloud.com/).
 
-Demo服务需要对ECS、VPC等资源进行访问和创建操作，若您使用RAM用户创建服务实例，需要在创建服务实例前，对使用的RAM用户的账号添加相应资源的权限。添加RAM权限的详细操作，请参见[为RAM用户授权](https://help.aliyun.com/document_detail/121945.html)。所需权限如下表所示。
+## Step 2: Access Compute Nest
 
+Navigate to Compute Nest and locate the service for Generative AI:
+[Compute Nest](https://computenest.console.aliyun.com/service/instance/create/ap-southeast-1?type=user&ServiceId=service-09b1567c53a44da78fbf&ServiceVersion=beta)
 
-| 权限策略名称 | 备注 |
-| --- | --- |
-| AliyunECSFullAccess | 管理云服务器服务（ECS）的权限 |
+![Model-Studio](./images/model-studio-rag.png).
 
-```
+## Step 3: Set Up an Instance and Its Parameters
 
-## 部署流程
+Configure the necessary parameters for the instance:
 
-### 部署步骤
+1. **Service Instance Name**: Provide a meaningful name for the instance.
+2. **Elastic Computing Services (ECS) Parameters**: Recommended to choose `ecs.c6.2xlarge` for faster document processing.
+3. **Instance Password**: Create a secure password for the instance.
 
-`(部署步骤内容)`
+![Instance Parameters](./images/instance-parameters.png)
 
-```
-eg:
+## Step 4: Setup AnalyticDB for PostgreSQL
 
-1. 单击部署链接，进入服务实例部署界面，根据界面提示，填写参数完成部署。
-2. 补充示意图。
-```
-### 部署参数说明
+Configure an AnalyticDB for PostgreSQL instance:
 
-`(部署参数说明内容)`
+1. **Instance Specification**: Select the suitable specification based on your data volume.
+2. **Segment Storage Size**: Adjust according to your needs.
+3. **DB Username**: By default `kbsuser`, or choose your own username.
+4. **DB Password**: Create a strong password (avoid using symbols like "@").
 
-```
-eg:
+![AnalyticDB Setup](./images/adbpg.png)
 
-您在创建服务实例的过程中，需要配置服务实例信息。下文介绍云XR实时渲染平台服务实例输入参数的详细信息。
+## Step 5: Configure WebUI Credentials
 
-| 参数组 | 参数项 | 示例 | 说明 |
-| --- | --- | --- | --- |
-| 服务实例名称 |  | test | 实例的名称 |
-| 地域 |  | 华北2（北京） | 选中服务实例的地域，建议就近选中，以获取更好的网络延时。 |
-```
+Configure the web UI credentials to manage and interact with your RAG service:
 
-### 验证结果
+1. **Username**: Default is `admin`, or choose another username.
+2. **Password**: Create a strong, secure password.
 
-`(验证结果内容)`
+![WebUI Configuration](./images/webui.png)
 
-```
-eg:
+## Step 6: Add Model Studio API Key
 
-1. 查看服务实例。服务实例创建成功后，部署时间大约需要2分钟。部署完成后，页面上可以看到对应的服务实例。 
-2. 通过服务实例访问TuGraph。进入到对应的服务实例后，可以在页面上获取到web、rpc、ssh共3种使用方式。
-```
+Add your Model Studio API key to authenticate and facilitate communication between services:
 
-### 使用Demo
+ **API Key**: Enter the API key you obtained from your Model Studio setup.
 
-`(服务使用说明内容)`
+![Model Studio API Key](./images/model-studio-api.png)
 
-```
-eg:
+Here is a guide on how to obtain your [Model Studio API key](https://www.alibabacloud.com/help/en/model-studio/developer-reference/get-api-key).
 
-请访问Demo官网了解如何使用：[使用文档](https://www.aliyun.com)
-```
+## Step 7: Network Configuration
 
-## 问题排查
+Choose the appropriate network settings to ensure secure and reliable connectivity:
 
-`(服务使用说明内容)`
+### Choose Existing Infrastructure Configuration
+1. Select whether to create a new VPC (Virtual Private Cloud) or use an existing one.
+   
+   **WhetherCreateVpc**: Choose `Create` if you need a new VPC.
+   
+2. **VPC ID**: Enter the ID of an existing VPC or create a new one.
+   
+   **Create VPC**: If creating a new VPC, follow the [Alibaba Cloud VPC Creation Guide](https://www.alibabacloud.com/help/doc-detail/65398.htm).
 
-```
-eg:
+3. **VSwitch ID**: Select the ID of an existing VSwitch or create a new one.
+   
+   **Create VSwitch**: Instructions are available in the [VSwitch Creation Guide](https://www.alibabacloud.com/help/doc-detail/65399.htm).
 
-请访问[Demo的问题排查链接](https://www.aliyun.com)获取帮助。
-```
+4. **Tags and Resource Groups**:
+   - **Tag**: Specify a tag that is attached to the created resource.
+     - **Tag Key**: Choose the tag key.
+     - **Tag Value**: Choose the tag value.
+   - **Resource Group**: Select the resource group to which the created service instance belongs.
+   
+   **Create Resource Group**: Follow the instructions to [Create a Resource Group](https://www.alibabacloud.com/help/doc-detail/94497.htm).
+ 
+After configuring these settings, click **Next: Confirm Order**.
 
-## 联系我们
+![Network Configuration](./images/network-resources.png)
 
-欢迎访问Demo官网（[https://www.aliyun.com](https://www.aliyun.com)）了解更多信息。
+By following these steps, you will ensure that your WebUI credentials and network settings are correctly configured to support your Alibaba Cloud Model Studio RAG service effectively.
 
-联系邮箱：[https://www.aliyun.com](mailto:https://www.aliyun.com)
+After setting up these parameters, click **Next: Confirm Order**.
 
-社区版开源地址：[https://github.com/](https://github.com/)
+![Confirm Order](./images/confirm-order.png
 
-扫码关注微信公众号，技术博客、活动通知不容错过：
+## Step 7: Integrate Gradio for Web UI
 
-`(添加二维码图片)`
+Use Gradio to create a web interface for interacting with your service:
+
+1. **Set up Gradio**: Follow Gradio's [documentation](https://www.gradio.app/docs/interface) for installation and configuration.
+2. **Integrate Services**: Connect Gradio to your backend services (Model Studio API endpoints and AnalyticDB for PostgreSQL).
+
+## Step 8: Deploy Your RAG Service
+
+Review all configurations and accept the **Terms of Service**. Click **Create Now** to deploy your RAG service.
+
+![Deploy Service](./images/deploy-service.png)
+
+## Using the RAG Service
+
+### General Question Answering
+
+Users can ask questions via the Gradio web interface, and the Model Studio API will provide responses based on the input.
+
+![Service Usage](./images/service-usage.png)
+
+### Uploading Documents for Retrieval Augmentation
+
+Users can upload documents which will be stored in the vector database, enhancing the model's retrieval capabilities.
+
+### Modifying the Service
+
+Authorized users can access the ECS instance to make any necessary changes or updates to the service.
+
+## Additional Resources
+
+To further explore and optimize your RAG service, check the following resources:
+- [Alibaba Cloud Model Studio Website](https://www.alibabacloud.com/en/product/modelstudio)
+- [Alibaba Cloud Model Studio Documentation](https://www.alibabacloud.com/help/en/model-studio/)
+- [Compute Nest Documentation](https://www.alibabacloud.com/blog/compute-nest-enabling-cutting-edge-generative-ai-integration-and-knowledge-base-systems-in-collaboration-with-alibaba-cloud_600421)
+- [AnalyticDB for PostgreSQL Documentation](https://www.alibabacloud.com/help/product/28108.htm)
+- [Gradio Documentation](https://www.gradio.app/docs/interface)
+
+**Related Tutorials:**
+- [Empowering Generative AI with Alibaba Cloud PAI's Advanced LLM and LangChain Features](https://www.alibabacloud.com/blog/empowering-generative-ai-with-alibaba-cloud-pais-advanced-llm-and-langchain-features_600577)
+- [Quickly Building a RAG Service on ComputeNest](https://www.alibabacloud.com/blog/quickly-building-a-rag-service-on-compute-nest-with-llm-on-pai-eas-and-analyticdb-for-postgresql_600783)
+- [Streamlined Deployment and Integration of Large Language Models with PAI-EAS](https://www.alibabacloud.com/blog/streamlined-deployment-and-integration-of-large-language-models-with-pai-eas_600762)
+- [Deploy Your Own AI Chat Buddy - The Qwen Chat Model Deployment with Hugging Face Guide](https://www.alibabacloud.com/blog/deploy-your-own-ai-chat-buddy---the-qwen-chat-model-deployment-with-hugging-face-guide_600859)
+- [Igniting the AI Revolution - A Journey with Qwen, RAG, and LangChain](https://www.alibabacloud.com/blog/igniting-the-ai-revolution---a-journey-with-qwen-rag-and-langchain_600876)
+- [Building Multimodal Services with Qwen and Model Studio](https://www.alibabacloud.com/blog/building-multimodal-services-with-qwen-and-model-studio_600962)
+- [Next-Level Conversations: LLM + VectorDB with Alibaba Cloud Is Customizable and Cost-Efficient](https://www.alibabacloud.com/blog/next-level-conversations-llm-%2B-vectordb-with-alibaba-cloud-is-customizable-and-cost-efficient_599985)
+
+## Conclusion
+
+This tutorial has guided you through the comprehensive process of building a Retrieval-Augmented Generation (RAG) service using Alibaba Cloud Model Studio, Compute Nest, and AnalyticDB for PostgreSQL. By leveraging Model Studio's powerful suite of generative AI models, including Qwen, you can streamline the development, deployment, and management of AI applications within your enterprise. This setup ensures secure, scalable, and efficient interactions, from natural language queries to document retrieval enhancements. Following these steps will enable you to harness advanced AI capabilities, thereby transforming data management and utilization within your organization. For ongoing optimization and support, consider exploring the additional resources and related tutorials provided.

@@ -140,14 +140,14 @@ After setting up these parameters, click **Next: Confirm Order**.
 
 ![Confirm Order](./images/confirm-order.png
 
-## Step 7: Integrate Gradio for Web UI
+## Step 8: Integrate Gradio for Web UI
 
 Use Gradio to create a web interface for interacting with your service:
 
 1. **Set up Gradio**: Follow Gradio's [documentation](https://www.gradio.app/docs/interface) for installation and configuration.
 2. **Integrate Services**: Connect Gradio to your backend services (Model Studio API endpoints and AnalyticDB for PostgreSQL).
 
-## Step 8: Deploy Your RAG Service
+## Step 9: Deploy Your RAG Service
 
 Review all configurations and accept the **Terms of Service**. Click **Create Now** to deploy your RAG service.
 
